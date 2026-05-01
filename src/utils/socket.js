@@ -18,13 +18,14 @@ const initiateServer = (server) => {
 
     io.on("connection", (socket) => {
 
+
         socket.on("joinChat", ({ firstName, userId, targetUserId }) => {
             const roomId = createSecretRoomId(userId, targetUserId)
             console.log(firstName + " joined room :" + roomId)
             socket.join(roomId);
         });
 
-        socket.on("sendMessage", async ({ firstName,lastName, userId, targetUserId, text }) => {
+        socket.on("sendMessage", async ({ firstName, lastName, userId, targetUserId, text }) => {
             try {
                 const roomId = createSecretRoomId(userId, targetUserId)
                 console.log(firstName + ":" + text);
@@ -41,7 +42,7 @@ const initiateServer = (server) => {
                     senderId: userId, text
                 });
                 await chat.save();
-                io.to(roomId).emit("messageReceived", { firstName,lastName, text })
+                io.to(roomId).emit("messageReceived", { firstName, lastName, text })
             }
             catch (err) {
                 console.log(err.message)
@@ -49,7 +50,7 @@ const initiateServer = (server) => {
         });
 
         socket.on("disconnect", () => {
-
+            
         });
     });
 }
